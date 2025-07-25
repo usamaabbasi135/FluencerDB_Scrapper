@@ -5,7 +5,7 @@ def save_to_excel(data, keyword, output_dir):
     output_path = os.path.join(output_dir, f"{keyword}.xlsx")
     os.makedirs(output_dir, exist_ok=True)
 
-    # Load old data if file exists
+    # Load old data if file existsgit
     if os.path.exists(output_path):
         old_df = pd.read_excel(output_path)
         new_df = pd.DataFrame(data)

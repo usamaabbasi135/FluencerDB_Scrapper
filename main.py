@@ -9,6 +9,16 @@ import time
 from utils.progress_tracker import load_progress, save_progress
 
 def load_keywords_from_file(file_path="keywords.txt"):
+    """
+    Reads keywords from a text file, one per line.
+    Removes extra whitespace and skips blank lines.
+    
+    Args:
+        file_path (str): Path to the keywords file. Defaults to 'keywords.txt'.
+
+    Returns:
+        list: A list of cleaned, non-empty keyword strings.
+    """
     with open(file_path, "r") as f:
         return [line.strip() for line in f if line.strip()]
 
