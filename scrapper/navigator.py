@@ -12,7 +12,7 @@ def perform_search(driver, keyword):
 
     # Wait for search input to be visible
     try:
-        search_box = WebDriverWait(driver, 15).until(
+        search_box = WebDriverWait(driver, 25).until(
             EC.presence_of_element_located((By.ID, "search-query"))
         )
     except:
