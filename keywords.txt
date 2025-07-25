@@ -1,12 +1,8 @@
-teen 
-pet 
-girl 
+Beauty
+Fashion
+cat
 guy 
-Traveling 
-makeup 
-Beauty 
-pet 
-Fashion 
+Traveling
 invest 
 usa 
 uk 
@@ -14,6 +10,4 @@ germany
 italy 
 europe 
 mexico 
-canada 
-dog 
-cat
+canada

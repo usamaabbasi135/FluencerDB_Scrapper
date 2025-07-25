@@ -25,25 +25,31 @@ def perform_search(driver, keyword,page=1):
     url = f"https://fluencerdb.com/search/{keyword}?page={page}"
     driver.get(url)
 
+    if page == 1:
     # Wait until the search box is visible (up to 25 seconds)
-    try:
-        search_box = WebDriverWait(driver, 60).until(
-            EC.presence_of_element_located((By.ID, "search-query"))
+        try:
+            search_box = WebDriverWait(driver, 60).until(
+                EC.presence_of_element_located((By.ID, "search-query"))
+            )
+        except:
+            print("[ERROR] Search input box not found.")
+            driver.save_screenshot("search_box_error.png") # Save screenshot for debugging
+            raise
+
+        # Type the keyword into the input box and click Search
+        search_box.clear()
+        search_box.send_keys(keyword)
+
+        search_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Search')]")
+        search_button.click()
+
+        # Wait for results to load
+        time.sleep(3)
+    else:
+        # If page > 1, wait for table rows directly
+        WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "table tbody tr"))
         )
-    except:
-        print("[ERROR] Search input box not found.")
-        driver.save_screenshot("search_box_error.png") # Save screenshot for debugging
-        raise
-
-    # Type the keyword into the input box and click Search
-    search_box.clear()
-    search_box.send_keys(keyword)
-
-    search_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Search')]")
-    search_button.click()
-
-    # Wait for results to load
-    time.sleep(3)
 
 def go_to_next_page(driver):
     """

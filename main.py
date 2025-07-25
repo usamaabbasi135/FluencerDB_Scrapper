@@ -31,45 +31,52 @@ def main():
     progress = load_progress()
 
     for keyword in keywords:
-        print(f"\n====== Starting keyword: {keyword} ======")
-        driver = get_driver(headless=HEADLESS)
+        success = False
+        remove_keyword_from_file(keyword)
+        while not success:
+            print(f"\n====== Starting keyword: {keyword} ======")
+            driver = get_driver(headless=HEADLESS)
 
-        all_data = []
-        current_page = progress.get(keyword, 1)
-
-        try:
-            perform_search(driver, keyword,current_page)
-            
-            while True:
-                print(f"[INFO] Scraping page {current_page} for keyword: {keyword}")
-                page_data = extract_table_data(driver)
-                all_data.extend(page_data)
-
-                progress[keyword] = current_page
-                
-                if current_page % 10 == 0:
-                   save_to_excel(all_data, keyword, OUTPUT_DIR)
-                   save_progress(progress)
-                   print(progress)
-
-                if MAX_PAGES and current_page >= MAX_PAGES:
-                    break
-
-                if not go_to_next_page(driver):
-                    break
-
-                current_page += 1
-            save_to_excel(all_data, keyword, OUTPUT_DIR)
-            save_progress(progress)
-            remove_keyword_from_file(keyword)
-
-        except Exception as e:
-            print(f"[ERROR] Failed for keyword '{keyword}': {e}")
-        finally:
+            all_data = []
+            current_page = progress.get(keyword, 1)
+            print(current_page)
+        
             try:
-                driver.quit()
-            except:
-                pass
+                perform_search(driver, keyword,current_page)
+                
+                while True:
+                    print(f"[INFO] Scraping page {current_page} for keyword: {keyword}")
+                    page_data = extract_table_data(driver)
+                    all_data.extend(page_data)
+
+                    progress[keyword] = current_page
+                    
+                    if current_page % 10 == 0:
+                        save_to_excel(all_data, keyword, OUTPUT_DIR)
+                        save_progress(progress)
+                        print(progress)
+
+                    if MAX_PAGES and current_page >= MAX_PAGES:
+                        break
+
+                    if not go_to_next_page(driver):
+                        break
+
+                    current_page += 1
+
+                save_to_excel(all_data, keyword, OUTPUT_DIR)
+                save_progress(progress)
+                success = True
+
+            except Exception as e:
+                print(f"[ERROR] Failed for keyword '{keyword}': {e}")
+                print("[INFO] Retrying the same keyword after short delay...")
+                time.sleep(5)
+            finally:
+                try:
+                    driver.quit()
+                except:
+                    pass
 
         # Optional: short delay between keywords to avoid suspicion
         time.sleep(3)
