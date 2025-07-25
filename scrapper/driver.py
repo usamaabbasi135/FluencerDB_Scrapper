@@ -18,4 +18,4 @@ def get_driver(headless=False):
     options.add_argument("--disable-blink-features=AutomationControlled")  # Hide automation
 
     driver = uc.Chrome(options=options) # Launch browser
-    return driver
+    return drivers
