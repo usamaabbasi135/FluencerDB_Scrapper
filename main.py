@@ -7,6 +7,8 @@ from scrapper.parser import extract_table_data
 from utils.excel_writer import save_to_excel
 import time
 from utils.progress_tracker import load_progress, save_progress
+from utils.keyword_utils import remove_keyword_from_file
+
 
 def load_keywords_from_file(file_path="keywords.txt"):
     """
@@ -36,11 +38,7 @@ def main():
         current_page = progress.get(keyword, 1)
 
         try:
-            perform_search(driver, keyword)
-            all_data = []
-
-            for _ in range(1, current_page):
-                            go_to_next_page(driver)
+            perform_search(driver, keyword,current_page)
             
             while True:
                 print(f"[INFO] Scraping page {current_page} for keyword: {keyword}")
@@ -48,9 +46,11 @@ def main():
                 all_data.extend(page_data)
 
                 progress[keyword] = current_page
-                save_progress(progress)
+                
                 if current_page % 10 == 0:
                    save_to_excel(all_data, keyword, OUTPUT_DIR)
+                   save_progress(progress)
+                   print(progress)
 
                 if MAX_PAGES and current_page >= MAX_PAGES:
                     break
@@ -59,8 +59,9 @@ def main():
                     break
 
                 current_page += 1
-
             save_to_excel(all_data, keyword, OUTPUT_DIR)
+            save_progress(progress)
+            remove_keyword_from_file(keyword)
 
         except Exception as e:
             print(f"[ERROR] Failed for keyword '{keyword}': {e}")
