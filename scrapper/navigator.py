@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import time
-
+from config import WAIT_TIME
 def perform_search(driver, keyword,page=1):
     """
     Performs a keyword search on the FluencerDB website.
@@ -26,9 +26,9 @@ def perform_search(driver, keyword,page=1):
     driver.get(url)
 
     if page == 1:
-    # Wait until the search box is visible (up to 25 seconds)
+    # Wait until the search box is visible (up to 60 seconds)
         try:
-            search_box = WebDriverWait(driver, 60).until(
+            search_box = WebDriverWait(driver, 300).until(
                 EC.presence_of_element_located((By.ID, "search-query"))
             )
         except:
@@ -47,7 +47,7 @@ def perform_search(driver, keyword,page=1):
         time.sleep(3)
     else:
         # If page > 1, wait for table rows directly
-        WebDriverWait(driver, 15).until(
+        WebDriverWait(driver, WAIT_TIME).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "table tbody tr"))
         )
 

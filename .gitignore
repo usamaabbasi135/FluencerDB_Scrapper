@@ -1,3 +1,7 @@
 data/
 progress.json
 utils/__pycache__/progress_tracker.cpython-313.pyc
+data.zip
+.gitignore
+keywords.txt
+scrapper\__pycache__
